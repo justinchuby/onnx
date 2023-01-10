@@ -58,9 +58,7 @@ class ModelInfo:
         self.raw_model_info: Dict[str, Any] = raw_model_info
 
     def __str__(self) -> str:
-        return "ModelInfo(model={}, opset={}, path={}, metadata={})".format(
-            self.model, self.opset, self.model_path, self.metadata
-        )
+        return f"ModelInfo(model={self.model}, opset={self.opset}, path={self.model_path}, metadata={self.metadata})"
 
     def __repr__(self) -> str:
         return self.__str__()
@@ -72,7 +70,7 @@ def set_dir(new_dir: str) -> None:
 
     :param new_dir: location of new model hub cache
     """
-    global _ONNX_HUB_DIR
+    global _ONNX_HUB_DIR  # pylint: disable=global-statement
     _ONNX_HUB_DIR = new_dir
 
 
@@ -120,8 +118,7 @@ def _get_base_url(repo: str, lfs: bool = False) -> str:
 
     if lfs:
         return f"https://media.githubusercontent.com/media/{repo_owner}/{repo_name}/{repo_ref}/"
-    else:
-        return f"https://raw.githubusercontent.com/{repo_owner}/{repo_name}/{repo_ref}/"
+    return f"https://raw.githubusercontent.com/{repo_owner}/{repo_name}/{repo_ref}/"
 
 
 def _download_file(url: str, file_name: str) -> None:
@@ -175,14 +172,14 @@ def list_models(
     # Filter by tags
     if tags is None:
         return matching_models
-    else:
-        canonical_tags = {t.lower() for t in tags}
-        matching_info_list: List[ModelInfo] = []
-        for m in matching_models:
-            model_tags = {t.lower() for t in m.tags}
-            if len(canonical_tags.intersection(model_tags)) > 0:
-                matching_info_list.append(m)
-        return matching_info_list
+
+    canonical_tags = {t.lower() for t in tags}
+    matching_info_list: List[ModelInfo] = []
+    for m in matching_models:
+        model_tags = {t.lower() for t in m.tags}
+        if len(canonical_tags.intersection(model_tags)) > 0:
+            matching_info_list.append(m)
+    return matching_info_list
 
 
 def get_model_info(
@@ -242,9 +239,9 @@ def load(
     if force_reload or not os.path.exists(local_model_path):
         if not _verify_repo_ref(repo) and not silent:
             msg = (
-                'The model repo specification "{}" is not trusted and may'
+                f'The model repo specification "{repo}" is not trusted and may'
                 " contain security vulnerabilities. Only continue if you trust this repo."
-            ).format(repo)
+            )
 
             print(msg, file=sys.stderr)
             print("Continue?[y/n]")

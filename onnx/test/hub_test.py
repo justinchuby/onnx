@@ -1,4 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
+
+# pylint: disable=protected-access
 import glob
 import os
 import unittest
@@ -6,8 +8,7 @@ from os.path import join
 
 import pytest
 
-import onnx.hub as hub
-from onnx import ModelProto
+from onnx import ModelProto, hub
 
 
 @pytest.mark.skipif(

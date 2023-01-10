@@ -190,6 +190,13 @@ include_patterns = [
     'tools/**/*.py',
 ]
 exclude_patterns = [
+    'onnx/backend/test/**',
+    'onnx/backend/sample/ops/abs.py', # redefined-builtin
+    'onnx/checker.py',
+    'tools/protoc-gen-mypy.py',
+    'onnx/test/basic_test.py',
+    'onnx/test/parser_test.py',
+    'onnx/test/version_converter_test.py',
 ]
 command = [
     'python3',

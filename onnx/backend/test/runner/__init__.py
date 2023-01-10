@@ -223,9 +223,7 @@ class Runner:
             download_file.close()
             assert model_test.url
             print(
-                "Start downloading model {} from {}".format(
-                    model_test.model_name, model_test.url
-                )
+                f"Start downloading model {model_test.model_name} from {model_test.url}"
             )
             urlretrieve(model_test.url, download_file.name)
             print("Done")
@@ -233,9 +231,7 @@ class Runner:
                 t.extractall(models_dir)
         except Exception as e:
             print(
-                "Failed to prepare data for model {}: {}".format(
-                    model_test.model_name, e
-                )
+                f"Failed to prepare data for model {model_test.model_name}: {e}"
             )
             raise
         finally:
@@ -281,9 +277,7 @@ class Runner:
             device_test_name = f"{test_name}_{device.lower()}"
             if device_test_name in self._test_items[category]:
                 raise ValueError(
-                    'Duplicated test name "{}" in category "{}"'.format(
-                        device_test_name, category
-                    )
+                    f'Duplicated test name "{device_test_name}" in category "{category}"'
                 )
 
             @unittest.skipIf(  # type: ignore
@@ -298,9 +292,7 @@ class Runner:
                     # hacky verbose reporting
                     if "-v" in sys.argv or "--verbose" in sys.argv:
                         print(
-                            "Test {} is effectively skipped: {}".format(
-                                device_test_name, e
-                            )
+                            f"Test {device_test_name} is effectively skipped: {e}"
                         )
 
             self._test_items[category][device_test_name] = TestItem(

@@ -1670,6 +1670,7 @@ class TestReferenceEvaluator(unittest.TestCase):
         ):
             # source: https://stackoverflow.com/questions/51703367/col2im-implementation-in-convnet
             N, C, H, W = x_shape
+            del N  # Unused
             assert (H + padding[0] + padding[2] - field_height) % stride == 0
             assert (W + padding[1] + padding[3] - field_height) % stride == 0
             out_height = (H + padding[0] + padding[2] - field_height) // stride + 1
