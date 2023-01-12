@@ -204,7 +204,7 @@ command = [
     'lintrunner_adapters',
     'run',
     'pylint_linter',
-    '--rcfile=pyproject.toml',
+    '--rcfile=pyproject_pylint.toml',
     '--show-disable',
     '--',
     '@{{PATHSFILE}}'
