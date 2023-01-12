@@ -180,7 +180,8 @@ def save_external_data(tensor: TensorProto, base_path: str) -> None:
 
     # Create file if it doesn't exist
     if not os.path.isfile(external_data_file_path):
-        open(external_data_file_path, "ab").close()  # pylint: disable=consider-using-with
+        with open(external_data_file_path, "ab"):
+            pass
 
     # Open file for reading and writing at random locations ('r+b')
     with open(external_data_file_path, "r+b") as data_file:

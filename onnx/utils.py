@@ -69,7 +69,7 @@ class Extractor:
         input_names: List[str],
         output_names: List[str],
     ) -> List[NodeProto]:
-        reachable_nodes = []
+        reachable_nodes = []  # type: ignore[var-annotated]
         for name in output_names:
             self._dfs_search_reachable_nodes(name, input_names, reachable_nodes)
         # needs to be topology sorted.

@@ -174,9 +174,7 @@ def convert(  # pylint: disable=too-many-branches,too-many-statements
             porto3_dir = os.path.dirname(proto3)
             base_dir = os.path.dirname(porto3_dir)
             gen_proto3_code(protoc_path, proto3, base_dir, base_dir, base_dir)
-            pb3_files = glob.glob(
-                os.path.join(porto3_dir, f"{proto_base}.proto3.*")
-            )
+            pb3_files = glob.glob(os.path.join(porto3_dir, f"{proto_base}.proto3.*"))
             for pb3_file in pb3_files:
                 print(f"Removing {pb3_file}")
                 os.remove(pb3_file)

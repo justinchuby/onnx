@@ -1194,4 +1194,4 @@ def get_all_tensor_dtypes() -> KeysView[int]:
 
     :return: all tensor types from TensorProto
     """
-    return mapping.TENSOR_TYPE_MAP
+    return mapping.TENSOR_TYPE_MAP.keys()

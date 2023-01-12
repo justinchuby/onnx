@@ -230,9 +230,7 @@ class Runner:
             with tarfile.open(download_file.name) as t:
                 t.extractall(models_dir)
         except Exception as e:
-            print(
-                f"Failed to prepare data for model {model_test.model_name}: {e}"
-            )
+            print(f"Failed to prepare data for model {model_test.model_name}: {e}")
             raise
         finally:
             os.remove(download_file.name)
@@ -291,9 +289,7 @@ class Runner:
                 except BackendIsNotSupposedToImplementIt as e:
                     # hacky verbose reporting
                     if "-v" in sys.argv or "--verbose" in sys.argv:
-                        print(
-                            f"Test {device_test_name} is effectively skipped: {e}"
-                        )
+                        print(f"Test {device_test_name} is effectively skipped: {e}")
 
             self._test_items[category][device_test_name] = TestItem(
                 device_test_func, report_item
