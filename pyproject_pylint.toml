@@ -20,5 +20,6 @@ disable = [
     "too-many-locals",
     "too-many-public-methods",
     "too-many-return-statements",
+    "useless-return",
     "wrong-import-order",
 ]

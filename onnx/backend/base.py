@@ -90,6 +90,7 @@ class Backend:
     ) -> Optional[BackendRep]:
         # TODO Remove Optional from return type
         onnx.checker.check_model(model)
+        return None
 
     @classmethod
     def run_model(
@@ -123,6 +124,8 @@ class Backend:
             onnx.checker.check_node(node, special_context)
         else:
             onnx.checker.check_node(node)
+
+        return None
 
     @classmethod
     def supports_device(cls, device: str) -> bool:

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-# pylint: disable=C3001
+# pylint: disable=C3001,isinstance-second-argument-not-valid-type
 
 import sys
 from typing import Any, Dict, List, Optional, Sequence, Union
@@ -92,7 +92,7 @@ def to_array(tensor: TensorProto, base_dir: str = "") -> np.ndarray:
 
     data = getattr(tensor, storage_field)
     if tensor_dtype in (TensorProto.COMPLEX64, TensorProto.COMPLEX128):
-        data = combine_pairs_to_complex(data)
+        data = combine_pairs_to_complex(data)  # type: ignore[assignment,arg-type]
 
     return np.asarray(data, dtype=storage_np_dtype).astype(np_dtype).reshape(dims)
 
@@ -293,8 +293,9 @@ def from_dict(dict_: Dict[Any, Any], name: Optional[str] = None) -> MapProto:
 
     if not all(
         isinstance(
-            key, raw_key_type
-        )  # pylint: disable=isinstance-second-argument-not-valid-type
+            key,
+            raw_key_type,  # type: ignore[arg-type]
+        )
         for key in keys
     ):
         raise TypeError(

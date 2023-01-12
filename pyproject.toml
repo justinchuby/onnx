@@ -68,4 +68,5 @@ disable = [
     "import-error",
     "line-too-long",
     "no-name-in-module",
+    "useless-return",
 ]
