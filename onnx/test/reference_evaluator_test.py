@@ -2567,7 +2567,7 @@ class TestReferenceEvaluator(unittest.TestCase):
                         for n in sess.rt_nodes_[0].body.rt_nodes_
                         if n.__class__.__name__.startswith(reduce_op)
                     ]
-                    schema = cl[0]._schema
+                    schema = cl[0]._schema  # pylint: disable=protected-access
                     new_cl = type(reduce_op, (cl[0].__class__,), {"op_schema": schema})
                     sess = ReferenceEvaluator(model, new_ops=[new_cl])
                     got = sess.run(None, {"input": X})
