@@ -44,7 +44,7 @@ exclude_patterns = [
     'docs/**',
 ]
 command = [
-    'python3',
+    'python',
     '-m',
     'lintrunner_adapters',
     'run',
@@ -53,7 +53,7 @@ command = [
     '@{{PATHSFILE}}'
 ]
 init_command = [
-    'python3',
+    'python',
     '-m',
     'lintrunner_adapters',
     'run',
@@ -78,7 +78,7 @@ exclude_patterns = [
     'onnx/reference/reference_evaluator.py',
 ]
 command = [
-    'python3',
+    'python',
     '-m',
     'lintrunner_adapters',
     'run',
@@ -89,7 +89,7 @@ command = [
     '@{{PATHSFILE}}'
 ]
 init_command = [
-    'python3',
+    'python',
     '-m',
     'lintrunner_adapters',
     'run',
@@ -111,7 +111,7 @@ exclude_patterns = [
     'docs/**',
 ]
 command = [
-    'python3',
+    'python',
     '-m',
     'lintrunner_adapters',
     'run',
@@ -120,7 +120,7 @@ command = [
     '@{{PATHSFILE}}'
 ]
 init_command = [
-    'python3',
+    'python',
     '-m',
     'lintrunner_adapters',
     'run',
@@ -136,7 +136,7 @@ code = 'NAMESPACE'
 include_patterns = ['**/*.cc', '**/*.h']
 exclude_patterns = ['third_party/**']
 command = [
-    'python3',
+    'python',
     '-m',
     'lintrunner_adapters',
     'run',
@@ -162,7 +162,7 @@ include_patterns = [
 exclude_patterns = [
 ]
 command = [
-    'python3',
+    'python',
     '-m',
     'lintrunner_adapters',
     'run',
@@ -173,7 +173,7 @@ command = [
     '@{{PATHSFILE}}'
 ]
 init_command = [
-    'python3',
+    'python',
     '-m',
     'lintrunner_adapters',
     'run',
@@ -199,7 +199,7 @@ exclude_patterns = [
     'onnx/test/version_converter_test.py',
 ]
 command = [
-    'python3',
+    'python',
     '-m',
     'lintrunner_adapters',
     'run',
@@ -210,7 +210,7 @@ command = [
     '@{{PATHSFILE}}'
 ]
 init_command = [
-    'python3',
+    'python',
     '-m',
     'lintrunner_adapters',
     'run',
