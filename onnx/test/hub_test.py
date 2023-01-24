@@ -97,9 +97,9 @@ class TestModelHub(unittest.TestCase):
         )
 
     def test_download_model_with_test_data(self) -> None:
-        dir = hub.download_model_with_test_data("mnist")
-        files = os.listdir(dir)
-        self.assertIsInstance(dir, str)
+        directory = hub.download_model_with_test_data("mnist")
+        files = os.listdir(directory)
+        self.assertIsInstance(directory, str)
         self.assertIn(member="model.onnx", container=files, msg="Onnx model not found")
         self.assertIn(
             member="test_data_set_0", container=files, msg="Test data not found"

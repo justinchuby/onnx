@@ -335,11 +335,12 @@ def download_model_with_test_data(
                 )
             )
 
-    model_with_data_zipped = tarfile.open(local_model_with_data_path)
-    local_model_with_data_dir_path = local_model_with_data_path[
-        0 : len(local_model_with_data_path) - 7
-    ]
-    model_with_data_zipped.extractall(local_model_with_data_dir_path)
+    with tarfile.open(local_model_with_data_path) as model_with_data_zipped:
+        # FIXME: Avoid index manipulation with magic numbers
+        local_model_with_data_dir_path = local_model_with_data_path[
+            0 : len(local_model_with_data_path) - 7
+        ]
+        model_with_data_zipped.extractall(local_model_with_data_dir_path)
     model_with_data_path = (
         local_model_with_data_dir_path
         + "/"
