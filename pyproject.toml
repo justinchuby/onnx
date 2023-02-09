@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -31,9 +31,6 @@ Repository = "https://github.com/onnx/onnx"
 backend-test-tools = "onnx.backend.test.cmd_tools:main"
 check-model = "onnx.bin.checker:check_model"
 check-node = "onnx.bin.checker:check_node"
-
-[tool.setuptools.dynamic]
-version = {file = "VERSION_NUMBER"}
 
 [tool.setuptools.packages.find]
 # TODO try to remove unnecessary .cpp files

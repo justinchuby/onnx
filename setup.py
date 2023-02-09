@@ -58,7 +58,7 @@ try:
         .strip()
     )
 except (OSError, subprocess.CalledProcessError):
-    git_version = None
+    git_version = ""
 
 with open(os.path.join(TOP_DIR, "VERSION_NUMBER")) as version_file:
     VERSION_NUMBER = version_file.read().strip()
@@ -67,9 +67,7 @@ with open(os.path.join(TOP_DIR, "VERSION_NUMBER")) as version_file:
         VERSION_NUMBER += ".dev" + today_number
         PACKAGE_NAME = "onnx-weekly"
         sys.argv.remove("--weekly_build")
-    VERSION_INFO = dict(
-        version=VERSION_NUMBER, git_version=git_version
-    )
+    VERSION_INFO = dict(version=VERSION_NUMBER, git_version=git_version)
 
 ################################################################################
 # Pre Check
@@ -291,4 +289,5 @@ EXT_MODULES = [setuptools.Extension(name="onnx.onnx_cpp2py_export", sources=[])]
 setuptools.setup(
     ext_modules=EXT_MODULES,
     cmdclass=CMD_CLASS,
+    version=VERSION_INFO["version"],
 )
