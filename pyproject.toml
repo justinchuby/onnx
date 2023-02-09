@@ -33,16 +33,7 @@ check-model = "onnx.bin.checker:check_model"
 check-node = "onnx.bin.checker:check_node"
 
 [tool.setuptools.packages.find]
-# TODO try to remove unnecessary .cpp files
-include = [
-    "onnx.backend.test.data.*",
-    "onnx.common",
-    "onnx.defs.*",
-    "onnx.examples*",
-    "onnx.shape_inference",
-    "onnx.test.cpp",
-    "onnx.version_converter*",
-]
+include = ["onnx*"]
 
 [tool.setuptools.package-data]
 onnx = ["py.typed", "*.pyi"]
