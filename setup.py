@@ -234,7 +234,7 @@ class BuildPy(setuptools.command.build_py.build_py):
             dst = os.path.join(TOP_DIR, os.path.relpath(src, CMAKE_BUILD_DIR))
             self.copy_file(src, dst)
         # TODO (https://github.com/pypa/setuptools/issues/3606)
-        # Review the command customisations to enable editable_mode
+        # Review the command customizations to enable editable_mode
         self.editable_mode = False
         return setuptools.command.build_py.build_py.run(self)
 
@@ -256,7 +256,7 @@ class BuildExt(setuptools.command.build_ext.build_ext):
             filename = os.path.basename(self.get_ext_filename(fullname))
 
             lib_path = CMAKE_BUILD_DIR
-            if os.name == "nt":
+            if WINDOWS:
                 debug_lib_dir = os.path.join(lib_path, "Debug")
                 release_lib_dir = os.path.join(lib_path, "Release")
                 if os.path.exists(debug_lib_dir):
