@@ -8,6 +8,7 @@ import glob
 import logging
 import multiprocessing
 import os
+import pathlib
 import platform
 import shlex
 import shutil

@@ -26,7 +26,7 @@ from onnx.onnx_cpp2py_export.defs import (  # pylint: disable=E1101,E0611,E0401
 def get_template():  # type: ignore
     try:
         from jinja2 import Template
-    except ImportError:  # pragma no cover
+    except ImportError:
 
         class Template:  # type: ignore
             "Docstring template"
@@ -401,8 +401,9 @@ def get_rst_doc(  # type: ignore
             name = str(ii)
         name = f"**{name}** in ("
         if const.allowed_type_strs:
-            text = ",\n  ".join(sorted(const.allowed_type_strs))
-            name += "\n  " + text + "\n  )"
+            types = [f"``{type_str}``" for type_str in sorted(const.allowed_type_strs)]
+            text = ", ".join(types)
+            name += " " + text + " )"
         return name
 
     def getname(obj, i):
@@ -419,7 +420,7 @@ def get_rst_doc(  # type: ignore
                 f"doc must be a string not {type(doc)!r} - {doc + 42!r}."
             )
         doc = textwrap.dedent(doc)
-        main_docs_url = "https://github.com/onnx/onnx/blob/master/"
+        main_docs_url = "https://github.com/onnx/onnx/blob/main/"
         rep = {
             "[the doc](IR.md)": "`ONNX <{0}docs/IR.md>`_",
             "[the doc](Broadcasting.md)": "`Broadcasting in ONNX <{0}docs/Broadcasting.md>`_",
@@ -885,9 +886,6 @@ def onnx_documentation_folder(folder, title="ONNX Operators", flog=None, max_ops
                 "=" * len(main),
                 main,
                 "=" * len(main),
-                "",
-                ".. contents::",
-                "    :local:",
                 "",
                 doc,
             ]

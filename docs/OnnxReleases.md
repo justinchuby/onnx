@@ -23,7 +23,7 @@ The ONNX project, going forward, will plan to release roughly on a four month ca
 
 * After cutting a release branch, bump [VERSION_NUMBER file](/VERSION_NUMBER) (next version number for future ONNX) in the main branch.
 
-* Create an issue in onnxruntime repo. See [a sample issue](https://github.com/microsoft/onnxruntime/issues/11108) for details. The issue is to request onnxruntime to update with the onnx release branch and to run all CI and packaging pipelines ([How_To_Update_ONNX_Dev_Notes](https://github.com/microsoft/onnxruntime/blob/master/docs/How_To_Update_ONNX_Dev_Notes.md)). It is possible that onnx bugs are detected with onnxruntime pipeline runs. In such case the bugs shall be fixed in the onnx main branch and cherry-picked into the release branch. Follow up with onnxruntime to ensure the issue is resolved in time before onnx release.
+* Create an issue in onnxruntime repo. See [a sample issue](https://github.com/microsoft/onnxruntime/issues/11108) for details. The issue is to request onnxruntime to update with the onnx release branch and to run all CI and packaging pipelines ([How_To_Update_ONNX_Dev_Notes](https://github.com/microsoft/onnxruntime/blob/main/docs/How_To_Update_ONNX_Dev_Notes.md)). It is possible that onnx bugs are detected with onnxruntime pipeline runs. In such case the bugs shall be fixed in the onnx main branch and cherry-picked into the release branch. Follow up with onnxruntime to ensure the issue is resolved in time before onnx release.
 
 ## Upload to TestPyPI
 **Wheels**
@@ -79,9 +79,7 @@ The ONNX project, going forward, will plan to release roughly on a four month ca
    * https://github.com/onnx/tensorflow-onnx
    * https://github.com/onnx/sklearn-onnx
    * https://github.com/onnx/onnxmltools
-   * https://github.com/onnx/keras-onnx
    * https://github.com/onnx/onnx-tensorrt
-   * https://github.com/onnx/onnx-coreml
 
 
 **Source distribution verification**
@@ -102,8 +100,7 @@ The ONNX project, going forward, will plan to release roughly on a four month ca
 ## After PyPI Release
 
 **Release summary**
-* Upload the source distribution, `.tar.gz` and `.zip`, in the release summary.
-* Create release in github with the right tag and upload the release summary along with .tar.gz and .zip
+* Create release summary in github with the right tag and upload the release summary along with .tar.gz and .zip (these compressed files will be auto-generated after publishing the release summary).
 
 **Announce**
 * Announce in slack, for instance, `onnx-general` channel.
