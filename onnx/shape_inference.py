@@ -7,7 +7,7 @@ complete.
 from typing import Dict, List, Optional, Sequence, Union
 
 import onnx
-import onnx.onnx_cpp2py_export.shape_inference as C  # noqa: N812
+import onnx.onnx_cpp2py_export.shape_inference as c_shape_inference
 from onnx import AttributeProto, FunctionProto, ModelProto, TypeProto
 
 
@@ -37,7 +37,7 @@ def infer_shapes(
     """
     if isinstance(model, (ModelProto, bytes)):
         model_str = model if isinstance(model, bytes) else model.SerializeToString()
-        inferred_model_str = C.infer_shapes(
+        inferred_model_str = c_shape_inference.infer_shapes(
             model_str, check_type, strict_mode, data_prop
         )
         return onnx.load_from_string(inferred_model_str)
@@ -73,7 +73,7 @@ def infer_shapes_path(
         # If output_path is not defined, default output_path would be the original model path
         if output_path == "":
             output_path = model_path
-        C.infer_shapes_path(model_path, output_path, check_type, strict_mode, data_prop)
+        c_shape_inference.infer_shapes_path(model_path, output_path, check_type, strict_mode, data_prop)
     else:
         raise TypeError(
             "infer_shapes_path only accepts model path (String), "
@@ -140,7 +140,7 @@ def infer_function_output_types(
     Apply type-and-shape-inference to given function body, with given input types
     and given input attribute values.
     """
-    result = C.infer_function_output_types(
+    result = c_shape_inference.infer_function_output_types(
         function.SerializeToString(),
         [x.SerializeToString() for x in input_types],
         [x.SerializeToString() for x in attributes],
@@ -154,4 +154,4 @@ def infer_function_output_types(
     return [to_type_proto(x) for x in result]
 
 
-InferenceError = C.InferenceError
+InferenceError = c_shape_inference.InferenceError

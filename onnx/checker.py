@@ -12,7 +12,7 @@ from typing import Any, Callable, Optional, Type, TypeVar, Union, cast
 from google.protobuf.message import Message
 
 import onnx.defs
-import onnx.onnx_cpp2py_export.checker as C  # noqa: N812
+import onnx.onnx_cpp2py_export.checker as c_checker
 import onnx.shape_inference
 from onnx import (
     IR_VERSION,
@@ -36,7 +36,7 @@ MAXIMUM_PROTOBUF = 2000000000
 
 
 # NB: Please don't edit this context!
-DEFAULT_CONTEXT = C.CheckerContext()
+DEFAULT_CONTEXT = c_checker.CheckerContext()
 DEFAULT_CONTEXT.ir_version = IR_VERSION
 # TODO: Maybe ONNX-ML should also be defaulted?
 DEFAULT_CONTEXT.opset_imports = {"": onnx.defs.onnx_opset_version()}
@@ -49,12 +49,12 @@ FuncType = TypeVar("FuncType", bound=Callable[..., Any])
 def _create_checker(proto_type: Type[Message]) -> Callable[[FuncType], FuncType]:
     def decorator(py_func: FuncType) -> FuncType:
         @functools.wraps(py_func)
-        def checker(proto: Message, ctx: C.CheckerContext = DEFAULT_CONTEXT) -> Any:
+        def checker(proto: Message, ctx: c_checker.CheckerContext = DEFAULT_CONTEXT) -> Any:
             if not isinstance(proto, proto_type):
                 raise RuntimeError(
                     f"You cannot pass an object that is not of type {proto_type.__name__}"
                 )
-            return getattr(C, py_func.__name__)(proto.SerializeToString(), ctx)
+            return getattr(c_checker, py_func.__name__)(proto.SerializeToString(), ctx)
 
         return cast(FuncType, checker)
 
@@ -63,33 +63,33 @@ def _create_checker(proto_type: Type[Message]) -> Callable[[FuncType], FuncType]
 
 @_create_checker(ValueInfoProto)
 def check_value_info(
-    value_info: ValueInfoProto, ctx: C.CheckerContext = DEFAULT_CONTEXT
+    value_info: ValueInfoProto, ctx: c_checker.CheckerContext = DEFAULT_CONTEXT
 ) -> None:
     pass
 
 
 @_create_checker(TensorProto)
-def check_tensor(tensor: TensorProto, ctx: C.CheckerContext = DEFAULT_CONTEXT) -> None:
+def check_tensor(tensor: TensorProto, ctx: c_checker.CheckerContext = DEFAULT_CONTEXT) -> None:
     pass
 
 
 @_create_checker(AttributeProto)
 def check_attribute(
-    attr: AttributeProto, ctx: C.CheckerContext = DEFAULT_CONTEXT
+    attr: AttributeProto, ctx: c_checker.CheckerContext = DEFAULT_CONTEXT
 ) -> None:
     pass
 
 
 @_create_checker(NodeProto)
-def check_node(node: NodeProto, ctx: C.CheckerContext = DEFAULT_CONTEXT) -> None:
+def check_node(node: NodeProto, ctx: c_checker.CheckerContext = DEFAULT_CONTEXT) -> None:
     pass
 
 
 def check_function(
-    function: FunctionProto, ctx: Optional[C.CheckerContext] = None
+    function: FunctionProto, ctx: Optional[c_checker.CheckerContext] = None
 ) -> None:
     if ctx is None:
-        ctx = C.CheckerContext()
+        ctx = c_checker.CheckerContext()
         ctx.ir_version = helper.find_min_ir_version_for(
             list(function.opset_import), True
         )
@@ -97,18 +97,18 @@ def check_function(
         for domain_version in function.opset_import:
             function_opset_dic[domain_version.domain] = domain_version.version
         ctx.opset_imports = function_opset_dic
-    C.check_function(function.SerializeToString(), ctx)
+    c_checker.check_function(function.SerializeToString(), ctx)
 
 
 @_create_checker(GraphProto)
-def check_graph(graph: GraphProto, ctx: C.CheckerContext = DEFAULT_CONTEXT) -> None:
+def check_graph(graph: GraphProto, ctx: c_checker.CheckerContext = DEFAULT_CONTEXT) -> None:
     pass
 
 
 def check_sparse_tensor(
-    sparse: SparseTensorProto, ctx: C.CheckerContext = DEFAULT_CONTEXT
+    sparse: SparseTensorProto, ctx: c_checker.CheckerContext = DEFAULT_CONTEXT
 ) -> None:
-    C.check_sparse_tensor(sparse.SerializeToString(), ctx)
+    c_checker.check_sparse_tensor(sparse.SerializeToString(), ctx)
 
 
 def check_model(model: Union[ModelProto, str, bytes], full_check: bool = False) -> None:
@@ -120,7 +120,7 @@ def check_model(model: Union[ModelProto, str, bytes], full_check: bool = False) 
     """
     # If model is a path instead of ModelProto
     if isinstance(model, str):
-        C.check_model_path(model, full_check)
+        c_checker.check_model_path(model, full_check)
     else:
         protobuf_string = (
             model if isinstance(model, bytes) else model.SerializeToString()
@@ -131,7 +131,7 @@ def check_model(model: Union[ModelProto, str, bytes], full_check: bool = False) 
             raise ValueError(
                 "This protobuf of onnx model is too large (>2GB). Call check_model with model path instead."
             )
-        C.check_model(protobuf_string, full_check)
+        c_checker.check_model(protobuf_string, full_check)
 
 
-ValidationError = C.ValidationError
+ValidationError = c_checker.ValidationError

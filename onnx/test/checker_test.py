@@ -5,7 +5,7 @@ from typing import Sequence
 import numpy as np
 
 import onnx.defs
-import onnx.onnx_cpp2py_export.checker as C  # noqa: N812
+import onnx.onnx_cpp2py_export.checker as c_checker
 from onnx import (
     GraphProto,
     SparseTensorProto,
@@ -92,7 +92,7 @@ class TestChecker(unittest.TestCase):
         onnx.checker.check_function(func_nested_identity_add)
 
     def test_check_graph_ir_version_3(self) -> None:
-        ctx = C.CheckerContext()
+        ctx = c_checker.CheckerContext()
         ctx.ir_version = 3
         ctx.opset_imports = {"": onnx.defs.onnx_opset_version()}
 

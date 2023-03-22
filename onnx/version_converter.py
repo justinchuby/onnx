@@ -6,7 +6,7 @@ default domain ("" or "ai.onnx").
 """
 
 import onnx
-import onnx.onnx_cpp2py_export.version_converter as C  # noqa: N812
+import onnx.onnx_cpp2py_export.version_converter as c_version_converter
 from onnx import ModelProto
 
 
@@ -168,8 +168,8 @@ def convert_version(model: ModelProto, target_version: int) -> ModelProto:
             f"VersionConverter only accepts int as target_version, incorrect type: {type(target_version)}"
         )
     model_str = model.SerializeToString()
-    converted_model_str = C.convert_version(model_str, target_version)
+    converted_model_str = c_version_converter.convert_version(model_str, target_version)
     return onnx.load_from_string(converted_model_str)
 
 
-ConvertError = C.ConvertError
+ConvertError = c_version_converter.ConvertError

@@ -2,7 +2,7 @@
 
 from typing import List
 
-import onnx.onnx_cpp2py_export.defs as C  # noqa: N812
+import onnx.onnx_cpp2py_export.defs as c_defs
 from onnx import AttributeProto, FunctionProto
 
 ONNX_DOMAIN = ""
@@ -10,10 +10,10 @@ ONNX_ML_DOMAIN = "ai.onnx.ml"
 AI_ONNX_PREVIEW_TRAINING_DOMAIN = "ai.onnx.preview.training"
 
 
-has = C.has_schema
-get_schema = C.get_schema
-get_all_schemas = C.get_all_schemas
-get_all_schemas_with_history = C.get_all_schemas_with_history
+has = c_defs.has_schema
+get_schema = c_defs.get_schema
+get_all_schemas = c_defs.get_all_schemas
+get_all_schemas_with_history = c_defs.get_all_schemas_with_history
 
 
 def onnx_opset_version() -> int:
@@ -21,7 +21,7 @@ def onnx_opset_version() -> int:
     Return current opset for domain `ai.onnx`.
     """
 
-    return C.schema_version_map()[ONNX_DOMAIN][1]
+    return c_defs.schema_version_map()[ONNX_DOMAIN][1]
 
 
 @property  # type: ignore
@@ -31,8 +31,8 @@ def _function_proto(self):  # type: ignore
     return func_proto
 
 
-OpSchema = C.OpSchema  # type: ignore
-C.OpSchema.function_body = _function_proto  # type: ignore
+OpSchema = c_defs.OpSchema  # type: ignore
+c_defs.OpSchema.function_body = _function_proto  # type: ignore
 
 
 @property  # type: ignore
@@ -50,8 +50,8 @@ def get_function_ops() -> List[OpSchema]:
     Return operators defined as functions.
     """
 
-    schemas = C.get_all_schemas()
+    schemas = c_defs.get_all_schemas()
     return [schema for schema in schemas if schema.has_function or schema.has_context_dependent_function]  # type: ignore
 
 
-SchemaError = C.SchemaError
+SchemaError = c_defs.SchemaError
