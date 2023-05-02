@@ -1,4 +1,13 @@
+# Copyright (c) ONNX Project Contributors
+#
+# SPDX-License-Identifier: Apache-2.0
+
 from __future__ import annotations
+
+__all__ = [
+    "ProtoSerializer",
+    "register_proto_serializer",
+]
 
 import abc
 import typing
@@ -10,31 +19,32 @@ import google.protobuf.text_format
 import onnx
 
 _Proto = TypeVar("_Proto", bound=google.protobuf.message.Message)
+# Encoding used for serializing and deserializing text files
+_ENCODING = "utf-8"
 
-registered_serializers: dict[str, Serializer] = {}
+registered_serializers: dict[str, ProtoSerializer] = {}
 
 
-class Serializer(abc.ABC):
+class ProtoSerializer(abc.ABC):
+    """A serializer-deserializer to and from in-memory Protocol Buffers representations."""
+
     supported_formats: Collection[str]
 
     @abc.abstractmethod
-    def serialize(self, proto: _Proto, encoding: str | None = None) -> Any:
+    def serialize(self, proto: _Proto) -> Any:
         """Serialize a in-memory proto to a serialized data type."""
 
     @abc.abstractmethod
-    def deserialize(
-        self, serialized: Any, proto: _Proto, encoding: str | None = None
-    ) -> _Proto:
+    def deserialize(self, serialized: Any, proto: _Proto) -> _Proto:
         """Parse a serialized data type into a in-memory proto."""
 
 
-class ProtobufSerializer(Serializer):
+class _ProtobufSerializer(ProtoSerializer):
     """Serialize and deserialize protobuf message."""
 
     supported_formats = ("protobuf",)
 
-    def serialize(self, proto: _Proto, encoding=None) -> bytes:
-        del encoding  # unused
+    def serialize(self, proto: _Proto) -> bytes:
         if hasattr(proto, "SerializeToString") and callable(proto.SerializeToString):
             try:
                 result = proto.SerializeToString()
@@ -50,8 +60,7 @@ class ProtobufSerializer(Serializer):
             f"No SerializeToString method is detected.\ntype is {type(proto)}"
         )
 
-    def deserialize(self, serialized: bytes, proto: _Proto, encoding=None) -> _Proto:
-        del encoding  # unused
+    def deserialize(self, serialized: bytes, proto: _Proto) -> _Proto:
         if not isinstance(serialized, bytes):
             raise TypeError(
                 f"Parameter 'serialized' must be bytes, but got type: {type(serialized)}"
@@ -64,42 +73,33 @@ class ProtobufSerializer(Serializer):
         return proto
 
 
-class TextProtoSerializer(Serializer):
+class _TextProtoSerializer(ProtoSerializer):
     """Serialize and deserialize text proto."""
 
     supported_formats = ("textproto",)
 
-    def serialize(self, proto: _Proto, encoding: str | None = None) -> bytes | str:
+    def serialize(self, proto: _Proto) -> bytes | str:
         textproto = google.protobuf.text_format.MessageToString(proto)
-        if encoding is None:
-            # Return a string if encoding is not specified
-            return textproto
-        return textproto.encode(encoding)
+        return textproto.encode(_ENCODING)
 
-    def deserialize(
-        self, serialized: bytes | str, proto: _Proto, encoding: str | None = "utf-8"
-    ) -> _Proto:
+    def deserialize(self, serialized: bytes | str, proto: _Proto) -> _Proto:
         if not isinstance(serialized, (bytes, str)):
             raise TypeError(
                 f"Parameter 'serialized' must be bytes or str, but got type: {type(serialized)}"
             )
         if isinstance(serialized, bytes):
-            if encoding is None:
-                raise ValueError(
-                    "Parameter 'encoding' must be specified when 'serialized' is bytes"
-                )
-            serialized = serialized.decode(encoding)
+            serialized = serialized.decode(_ENCODING)
         assert isinstance(serialized, str)
         return google.protobuf.text_format.Parse(serialized, proto)
 
 
-def register_serializer(serializer: Serializer) -> None:
+def register_proto_serializer(serializer: ProtoSerializer) -> None:
     """Register a serializer to the ONNX serialization framework."""
     for fmt in serializer.supported_formats:
         registered_serializers[fmt] = serializer
 
 
-def check_serialization_format(fmt: str) -> None:
+def check_format(fmt: str) -> None:
     """Check if the serialization format is supported."""
     if fmt not in registered_serializers:
         raise ValueError(
@@ -108,5 +108,5 @@ def check_serialization_format(fmt: str) -> None:
 
 
 # Register default serializers
-register_serializer(ProtobufSerializer())
-register_serializer(TextProtoSerializer())
+register_proto_serializer(_ProtobufSerializer())
+register_proto_serializer(_TextProtoSerializer())
