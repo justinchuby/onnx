@@ -41,9 +41,7 @@ class TestIO(unittest.TestCase):
 
     def test_load_model_when_input_is_bytes(self) -> None:
         proto = _simple_model()
-        proto_string = serialization.registered_serializers[self.format].serialize(
-            proto
-        )
+        proto_string = serialization.registry.get(self.format).serialize(proto)
         loaded_proto = onnx.load_model_from_string(proto_string, format=self.format)
         self.assertEqual(proto, loaded_proto)
 
@@ -52,7 +50,7 @@ class TestIO(unittest.TestCase):
         # When the proto is a bytes representation provided to `save_model`,
         # it should always be a serialized binary protobuf representation. Aka. format="protobuf"
         # The saved file format is specified by the `format` argument.
-        proto_string = serialization.registered_serializers["protobuf"].serialize(proto)
+        proto_string = serialization.registry.get("protobuf").serialize(proto)
         f = io.BytesIO()
         onnx.save_model(proto_string, f, format=self.format)
         loaded_proto = onnx.load_model(io.BytesIO(f.getvalue()), format=self.format)
@@ -68,9 +66,7 @@ class TestIO(unittest.TestCase):
 
     def test_load_tensor_when_input_is_bytes(self) -> None:
         proto = _simple_tensor()
-        proto_string = serialization.registered_serializers[self.format].serialize(
-            proto
-        )
+        proto_string = serialization.registry.get(self.format).serialize(proto)
         loaded_proto = onnx.load_tensor_from_string(proto_string, format=self.format)
         self.assertEqual(proto, loaded_proto)
 

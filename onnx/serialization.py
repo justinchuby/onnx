@@ -6,7 +6,7 @@ from __future__ import annotations
 
 __all__ = [
     "ProtoSerializer",
-    "register_proto_serializer",
+    "registry",
 ]
 
 import abc
@@ -22,8 +22,6 @@ _Proto = TypeVar("_Proto", bound=google.protobuf.message.Message)
 # Encoding used for serializing and deserializing text files
 _ENCODING = "utf-8"
 
-registered_serializers: dict[str, ProtoSerializer] = {}
-
 
 class ProtoSerializer(abc.ABC):
     """A serializer-deserializer to and from in-memory Protocol Buffers representations."""
@@ -37,6 +35,34 @@ class ProtoSerializer(abc.ABC):
     @abc.abstractmethod
     def deserialize(self, serialized: Any, proto: _Proto) -> _Proto:
         """Parse a serialized data type into a in-memory proto."""
+
+
+class _Registry:
+    def __init__(self) -> None:
+        self._serializers: dict[str, ProtoSerializer] = {}
+
+    def register(self, serializer: ProtoSerializer) -> None:
+        for fmt in serializer.supported_formats:
+            self._serializers[fmt] = serializer
+
+    def get(self, fmt: str) -> ProtoSerializer:
+        """Get a serializer for a format.
+
+        Args:
+            fmt (str): The format to get a serializer for.
+
+        Returns:
+            ProtoSerializer: The serializer for the format.
+
+        Raises:
+            ValueError: If the format is not supported.
+        """
+        try:
+            return self._serializers[fmt]
+        except KeyError:
+            raise ValueError(
+                f"Unsupported format: '{fmt}'. Supported formats are: {self._serializers.keys()}"
+            ) from None
 
 
 class _ProtobufSerializer(ProtoSerializer):
@@ -93,20 +119,7 @@ class _TextProtoSerializer(ProtoSerializer):
         return google.protobuf.text_format.Parse(serialized, proto)
 
 
-def register_proto_serializer(serializer: ProtoSerializer) -> None:
-    """Register a serializer to the ONNX serialization framework."""
-    for fmt in serializer.supported_formats:
-        registered_serializers[fmt] = serializer
-
-
-def check_format(fmt: str) -> None:
-    """Check if the serialization format is supported."""
-    if fmt not in registered_serializers:
-        raise ValueError(
-            f"Unsupported format: '{fmt}'. Supported formats are: {registered_serializers.keys()}"
-        )
-
-
 # Register default serializers
-register_proto_serializer(_ProtobufSerializer())
-register_proto_serializer(_TextProtoSerializer())
+registry = _Registry()
+registry.register(_ProtobufSerializer())
+registry.register(_TextProtoSerializer())
