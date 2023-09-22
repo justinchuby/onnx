@@ -1532,7 +1532,6 @@ class TestAutomaticUpgrade(unittest.TestCase):
     def test_HammingWindow(self) -> None:
         self._test_window_function("HammingWindow")
 
-    @pytest.mark.xfail(reason="FIXME(#5613): Implement version converters for DFT")
     def test_DFT(self) -> None:
         self._test_op_upgrade("DFT", 17, [[2, 16, 1], []], [[2, 16, 2]])
         self._test_op_upgrade("DFT", 17, [[2, 16, 2], []], [[2, 16, 2]])

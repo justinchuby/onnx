@@ -46,7 +46,7 @@ class AxisAttributeToInput : public Adapter {
 
     // Add the optional inputs if they don't exist
     while (inputs.size() < axis_index) {
-      const empty_input = graph->create(kUndefined);
+      Node* empty_input = graph->create(kUndefined);
       empty_input->insertBefore(node);
       node->addInput(empty_input->output());
     }

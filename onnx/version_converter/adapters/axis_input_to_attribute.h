@@ -34,33 +34,32 @@ class AxisInputToAttribute : public Adapter {
     const ArrayRef<Value*>& inputs = node->inputs();
 
     // 1. Handle when axis is not given
-    if !(inputs.size() > this->axis_index && inputs[this->axis_index]->node()->kind() != kUndefined) {
+    if (!(inputs.size() > this->axis_index && inputs[this->axis_index]->node()->kind() != kUndefined)) {
       node->i_(kaxis, this->default_axis);
       return EnsureAndReturnNode(node);
     }
 
     // 2. Get axis from constant operator
-    Value* index_val = inputs[this->axis_index];
-    Node* node = index_val->node();
+    Value* axis_val = inputs[this->axis_index];
+    Node* axis_node = axis_val->node();
     // Identify whether we have a Constant Op or an Initializer
-    if (node->kind() == kConstant) {
+    if (axis_node->kind() == kConstant) {
       // Get value attribute of kConstant
-      const std::vector<int64_t>& int64s = node->t(kvalue).int64s();
+      const std::vector<int64_t>& int64s = axis_node->t(kvalue).int64s();
       if (int64s.empty()) {
         // Also handle raw data
-        std::string raw_data = node->t(kvalue).raw();
+        std::string raw_data = axis_node->t(kvalue).raw();
         ONNX_ASSERTM(
             raw_data.size() != 0 && raw_data.size() % 8 == 0,
             "Raw Data must be non-empty and size must be a multiple of 8");
-        // TODO(justinchuby): Why cast to char* first?
-        int64_t* raw = const_cast<int64_t*>(const_cast<char*>(raw_data.c_str()));
+        const int64_t* raw = reinterpret_cast<int64_t*>(const_cast<char*>(raw_data.c_str()));
         node->i_(kaxis, static_cast<int64_t>(raw[0]));
       } else {
         node->i_(kaxis, int64s.at(0));
       }
       // If Constant node isn't used anywhere else, remove it
       node->removeInput(this->axis_index);
-      if (index_val->uses().size() < 1) {
+      if (axis_val->uses().size() < 1) {
         node->destroy();
       }
       return EnsureAndReturnNode(node);
@@ -73,8 +72,8 @@ class AxisInputToAttribute : public Adapter {
         node->i_(kaxis, initializer.int64s().at(0));
         node->removeInput(this->axis_index);
         // Remove initializer
-        if (index_val->uses().size() < 1)
-          graph->eraseInitializerAndInput(index_val);
+        if (axis_val->uses().size() < 1)
+          graph->eraseInitializerAndInput(axis_val);
         break;
       }
     }
