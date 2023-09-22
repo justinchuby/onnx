@@ -17,19 +17,41 @@ namespace version_conversion {
 
 class AxisAttributeToInput : public Adapter {
  public:
-  explicit AxisAttributeToInput(const std::string& op_name, const OpSetID& initial, const OpSetID& target)
-      : Adapter(op_name, initial, target) {}
+  explicit AxisAttributeToInput(
+      const std::string& op_name,
+      const OpSetID& initial,
+      const OpSetID& target,
+      int64_t axis_index,
+      int64_t default_axis)
+      : Adapter(op_name, initial, target), axis_index(axis_index), default_axis(default_axis) {}
 
   Node* adapt(std::shared_ptr<Graph> graph, Node* node) const override {
     if (node->hasAttribute(kaxis)) {
-      AttrToInput(graph, node, node->i(kaxis));
+      AttrToInput(graph, node, node->i(kaxis), this->axis_index);
       node->removeAttribute(kaxis);
+      return node;
     }
+
+    // Fill in the default value for axis
+    AttrToInput(graph, node, default_axis, this->axis_index);
     return node;
   }
 
  private:
-  void AttrToInput(std::shared_ptr<Graph> graph, Node* node, int64_t axis) const {
+  int64_t axis_index;
+  int64_t default_axis;
+
+  void AttrToInput(std::shared_ptr<Graph> graph, Node* node, int64_t axis, int64_t axis_index) const {
+    const ArrayRef<Value*>& inputs = node->inputs();
+
+    // Add the optional inputs if they don't exist
+    while (inputs.size() < axis_index) {
+      const empty_input = graph->create(kUndefined);
+      empty_input->insertBefore(node);
+      node->addInput(empty_input->output());
+    }
+
+    // Add the axis input
     Tensor t;
     t.elem_type() = TensorProto_DataType_INT64;
     t.sizes() = std::vector<int64_t>{};
