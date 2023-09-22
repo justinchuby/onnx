@@ -21,7 +21,7 @@ class AxisInputToAttribute : public Adapter {
       const std::string& op_name,
       const OpSetID& initial,
       const OpSetID& target,
-      int64_t axis_index,
+      size_t axis_index,
       int64_t default_axis)
       : Adapter(op_name, initial, target), axis_index(axis_index), default_axis(default_axis) {}
 
@@ -45,7 +45,7 @@ class AxisInputToAttribute : public Adapter {
   }
 
  private:
-  int64_t axis_index;
+  size_t axis_index;
   int64_t default_axis;
 
   bool HasAxisInput(const Node* node) const {

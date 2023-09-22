@@ -17,11 +17,11 @@ namespace version_conversion {
 
 class AxisAttributeToInput : public Adapter {
  public:
-  explicit AxisAttributeToInput(
+  AxisAttributeToInput(
       const std::string& op_name,
       const OpSetID& initial,
       const OpSetID& target,
-      int64_t axis_index,
+      size_t axis_index,
       int64_t default_axis)
       : Adapter(op_name, initial, target), axis_index(axis_index), default_axis(default_axis) {}
 
@@ -38,20 +38,25 @@ class AxisAttributeToInput : public Adapter {
   }
 
  private:
-  int64_t axis_index;
+  size_t axis_index;
   int64_t default_axis;
 
-  void AttrToInput(std::shared_ptr<Graph> graph, Node* node, int64_t axis, int64_t axis_index) const {
+  void AttrToInput(std::shared_ptr<Graph> graph, Node* node, int64_t axis, size_t axis_index) const {
     const ArrayRef<Value*>& inputs = node->inputs();
 
     // Add the optional inputs if they don't exist
-    while (inputs.size() < axis_index) {
+    for (size_t i = inputs.size(); i < axis_index; ++i) {
       Node* empty_input = graph->create(kUndefined);
       empty_input->insertBefore(node);
       node->addInput(empty_input->output());
     }
 
     // Add the axis input
+    Node* constant = CreateAxisInput(graph, node, axis);
+    node->addInput(constant->output());
+  }
+
+  Node* CreateAxisInput(std::shared_ptr<Graph> graph, Node* node, int64_t axis) const {
     Tensor t;
     t.elem_type() = TensorProto_DataType_INT64;
     t.sizes() = std::vector<int64_t>{};
@@ -61,7 +66,7 @@ class AxisAttributeToInput : public Adapter {
     Node* constant = graph->create(kConstant);
     constant->insertBefore(node);
     constant->t_(kvalue, t);
-    node->addInput(constant->output());
+    return constant;
   }
 };
 
