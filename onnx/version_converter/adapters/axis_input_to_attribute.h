@@ -33,16 +33,16 @@ class AxisInputToAttribute : public Adapter {
     // Identify if axis is statically determined; if so, feed as attribute
     const ArrayRef<Value*>& inputs = node->inputs();
 
-    // Handle when axis is not given
+    // 1. Handle when axis is not given
     if !(inputs.size() > this->axis_index && inputs[this->axis_index]->node()->kind() != kUndefined) {
       node->i_(kaxis, this->default_axis);
-      return node;
+      return EnsureAndReturnNode(node);
     }
 
-    // Get axis from initializer or constant operator
-    // Identify whether we have a Constant Op or an Initializer
+    // 2. Get axis from constant operator
     Value* index_val = inputs[this->axis_index];
     Node* node = index_val->node();
+    // Identify whether we have a Constant Op or an Initializer
     if (node->kind() == kConstant) {
       // Get value attribute of kConstant
       const std::vector<int64_t>& int64s = node->t(kvalue).int64s();
@@ -63,26 +63,32 @@ class AxisInputToAttribute : public Adapter {
       if (index_val->uses().size() < 1) {
         node->destroy();
       }
-    } else {
-      // Get Value name, find Initializer with same name
-      for (const auto& initializer : graph->initializers()) {
-        if (initializer.name() == inputs[this->axis_index]->uniqueName()) {
-          node->i_(kaxis, initializer.int64s().at(0));
-          node->removeInput(this->axis_index);
-          // Remove initializer
-          if (index_val->uses().size() < 1)
-            graph->eraseInitializerAndInput(index_val);
-          break;
-        }
+      return EnsureAndReturnNode(node);
+    }
+
+    // 3. Get axis from initializer
+    // Get Value name, find Initializer with same name
+    for (const auto& initializer : graph->initializers()) {
+      if (initializer.name() == inputs[this->axis_index]->uniqueName()) {
+        node->i_(kaxis, initializer.int64s().at(0));
+        node->removeInput(this->axis_index);
+        // Remove initializer
+        if (index_val->uses().size() < 1)
+          graph->eraseInitializerAndInput(index_val);
+        break;
       }
     }
-    ONNX_ASSERTM(node->hasAttribute(kaxis), "Axis attribute not created. This may be a bug.");
-    return node;
+    return EnsureAndReturnNode(node);
   }
 
  private:
   int64_t axis_index;
   int64_t default_axis;
+
+  inline Node* EnsureAndReturnNode(Node* node) const {
+    ONNX_ASSERTM(node->hasAttribute(kaxis), "Axis attribute not created. This may be a bug.");
+    return node;
+  }
 };
 
 } // namespace version_conversion
