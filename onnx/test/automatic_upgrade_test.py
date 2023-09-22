@@ -1546,6 +1546,9 @@ class TestAutomaticUpgrade(unittest.TestCase):
         self._test_op_upgrade(
             "DFT", 17, [[2, 16, 2], []], [[2, 16, 2]], attrs={"inverse": 1}
         )
+        self._test_op_upgrade(
+            "DFT", 17, [[2, 16, 2], []], [[2, 16, 2]], attrs={"inverse": 1, "axis": 0}
+        )
 
     def _test_short_time_fourier_transform(self, operator_name: str) -> None:
         # Real
