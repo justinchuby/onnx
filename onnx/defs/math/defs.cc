@@ -3141,7 +3141,6 @@ ONNX_OPERATOR_SET_SCHEMA(
             }
             axis = defs::math::utils::GetScalarValueFromTensor<int64_t>(axis_tensor);
           }
-
           if (!(-rank <= axis && axis != -1 && axis < rank - 1)) {
             fail_shape_inference(
                 "axis attribute value ",
