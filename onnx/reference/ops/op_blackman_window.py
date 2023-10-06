@@ -5,10 +5,10 @@
 
 import numpy as np
 
-from onnx.reference.ops._op_common_window import _CommonWindow
+from onnx.reference.ops._op_common_window import CommonWindow
 
 
-class BlackmanWindow(_CommonWindow):
+class BlackmanWindow(CommonWindow):
     """
     Returns
     :math:`\\omega_n = 0.42 - 0.5 \\cos \\left( \\frac{2\\pi n}{N-1} \\right) +
@@ -19,13 +19,9 @@ class BlackmanWindow(_CommonWindow):
     """
 
     def _run(self, size, output_datatype=None, periodic=None):  # type: ignore
-        ni, N_1 = np.arange(size), size
-        if periodic == 0:
-            N_1 = N_1 - 1
-        alpha = 0.42
-        beta = 0.08
-        pi = np.pi
-        y = np.cos((ni * (pi * 2)) / N_1) * (-0.5)
-        y += np.cos((ni * (pi * 4)) / N_1) * beta
-        y += alpha
-        return self._end(size, y, output_datatype)
+        if periodic:
+            window = np.blackman(size + 1)[:-1]
+        else:
+            window = np.blackman(size)
+
+        return self._end(size, window, output_datatype)

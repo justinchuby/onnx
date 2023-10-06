@@ -5,10 +5,10 @@
 
 import numpy as np
 
-from onnx.reference.ops._op_common_window import _CommonWindow
+from onnx.reference.ops._op_common_window import CommonWindow
 
 
-class HammingWindow(_CommonWindow):
+class HammingWindow(CommonWindow):
     """
     Returns
     :math:`\\omega_n = \\alpha - \\beta \\cos \\left( \\frac{\\pi n}{N-1} \\right)`

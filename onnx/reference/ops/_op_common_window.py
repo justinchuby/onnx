@@ -9,7 +9,7 @@ from onnx.helper import tensor_dtype_to_np_dtype
 from onnx.reference.op_run import OpRun
 
 
-class _CommonWindow(OpRun):
+class CommonWindow(OpRun):
     @staticmethod
     def _begin(size, periodic, output_datatype):  # type: ignore
         dtype = tensor_dtype_to_np_dtype(output_datatype)
