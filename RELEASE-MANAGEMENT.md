@@ -68,6 +68,8 @@ The community is encouraged to perform additional testing during the test
 periods. Bugs and issues should be filed in the ONNX GitHub repo.
 
 Distribution
+
+The distribution of files follows the basic procedures described in the [GitHub Actions workflow distribution](https://help.github.com/actions/workflow-distribution/) to ensure that the necessary files for the GitHub Actions run are included.
 ------------
 
 The distribution of files follows the basic procedures described in
