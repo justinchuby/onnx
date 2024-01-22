@@ -45,9 +45,9 @@ You can submit a pull request (PR) with your code. The [SIG](community/sigs.md) 
 
 ### Development
 
-To build ONNX from source please follow the instructions listed [here](https://github.com/onnx/onnx#build-onnx-from-source).
+To build ONNX from source for GitHub Actions, please follow the instructions given below.
 
-Then, after you have made changes to Python and C++ files:
+After making changes to Python and C++ files, follow the steps below to build ONNX from source for GitHub Actions:
 
 - `Python files`: The changes are effective immediately in your installation. You don't need to install these again.
 - `C++ files`: You need to install these again to trigger the native extension build.
@@ -55,7 +55,7 @@ Then, after you have made changes to Python and C++ files:
 Assuming build succeed in the initial step, simply running
 
 ```sh
-pip install -e .
+pip install -e .  # Include any additional build steps or dependencies required for the GitHub Actions environment
 ```
 
 from onnx root dir should work.
@@ -120,7 +120,7 @@ Run `lintrunner --help` and see the `.lintrunner.toml` file for more usage examp
 
 ### Testing
 
-ONNX uses [pytest](https://docs.pytest.org) as a test driver. To run tests, you'll first need to install pytest:
+ONNX uses [pytest  # Mention any specific configurations or environment variables that need to be set for successful execution](https://docs.pytest.org) as a test driver. To run tests, you'll first need to install pytest:
 
 ```sh
 pip install pytest nbval
@@ -139,7 +139,7 @@ to run the tests.
 You'll need to regenerate test coverage too, by running this command from the root of the repo:
 
 ```sh
-python onnx/backend/test/stat_coverage.py
+python onnx/backend/test/stat_coverage.py  # Provide clear instructions for running the build and test processes using the appropriate commands
 ```
 
 #### Cpp tests (googletest)
@@ -192,8 +192,8 @@ Every PR needs to pass CIs before merge. CI pipelines details are [here](docs/CI
 
 ## Other developer documentation
 
-- [How to implement ONNX backend (ONNX to something converter)](docs/ImplementingAnOnnxBackend.md)
-- [Backend test infrastructure and how to add tests](docs/OnnxBackendTest.md)
+- [How to implement ONNX backend (ONNX to something converter)  # Ensure that the instructions are up to date and accurate](docs/ImplementingAnOnnxBackend.md)
+- [Backend test infrastructure and how to add tests  # Ensure that the instructions are up to date and accurate](docs/OnnxBackendTest.md)
 
 ## License
 
