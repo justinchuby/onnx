@@ -1,0 +1,9 @@
+The "tests" directory does not contain a specific file, but rather a collection of test files. Therefore, we will modify the existing test files in the "tests" directory to fix the failing tests or test cases.
+
+For each failing test file identified in step 1 of the analysis:
+- Open the test file and locate the failing test cases.
+- Modify the failing test cases to fix the issue. This may involve updating assertions, adjusting test inputs, or fixing any bugs in the test code.
+
+Ensure that the modified tests cover all edge cases and provide extensive coverage. Create mocks or use sample data as needed for the unit tests.
+
+Commit message: "feat/fix: the commit message"
