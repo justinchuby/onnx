@@ -178,11 +178,11 @@ the target mantissa width.
 | 0                 | 0        | 0        | 0        | 0        |
 | -0                | -0       | 0        | -0       | 0        |
 | NaN               | NaN      | NaN      | NaN      | NaN      |
-| Inf               | FLT_MAX  | NaN      | FLT_MAX  | NaN      |
-| -Inf              | -FLT_MAX | NaN      | -FLT_MAX | NaN      |
-| \[x\] > FLT_MAX   | FLT_MAX  | FLT_MAX  | FLT_MAX  | FLT_MAX  |
-| \[x\] \< -FLT_MAX | -FLT_MAX | -FLT_MAX | -FLT_MAX | -FLT_MAX |
-| else              | RNE      | RNE      | RNE      | RNE      |
+| Inf               | Infinity  | NaN      | Infinity  | NaN      |
+| -Inf              | -Infinity | NaN      | -Infinity | NaN      |
+| \[x\] > FLT_MAX   | Infinity  | Infinity  | Infinity  | Infinity  |
+| \[x\] \< -FLT_MAX | -Infinity | -Infinity | -Infinity | -Infinity |
+| else              | Round to Nearest Even (RNE) | Round to Nearest Even (RNE)  | Round to Nearest Even (RNE)  | Round to Nearest Even (RNE)  |
 
 The conversion may also be defined without any saturation.
 
@@ -193,7 +193,8 @@ The conversion may also be defined without any saturation.
 | NaN               | NaN    | NaN      | NaN  | NaN      |
 | -NaN              | -NaN   | NaN      | -NaN | NaN      |
 | Inf               | NaN    | NaN      | Inf  | NaN      |
-| -Inf              | -NaN   | NaN      | -Inf | NaN      |
-| \[x\] > FLT_MAX   | NaN    | NaN      | Inf  | NaN      |
-| \[x\] \< -FLT_MAX | NaN    | NaN      | -Inf | NaN      |
-| else              | RNE    | RNE      | RNE  | RNE      |
+| Inf               | Infinity  | NaN      | Infinity  | NaN      |
+| -Inf              | -Infinity | NaN      | -Infinity | NaN      |
+| \[x\] > FLT_MAX   | Infinity  | Infinity  | Infinity  | Infinity  |
+| \[x\] \< -FLT_MAX | -Infinity | -Infinity | -Infinity | -Infinity |
+| else              | Round to Nearest Even (RNE) | Round to Nearest Even (RNE)  | Round to Nearest Even (RNE)  | Round to Nearest Even (RNE)  |
